@@ -1,0 +1,22 @@
+<module>
+	<rawname>filestorebackblaze</rawname>
+	<name>Filestore Backblaze</name>
+	<repo>unsupported</repo>
+	<version>17.0.3</version>
+	<publisher>PJL Telecom LLC</publisher>
+	<license>AGPLv3</license>
+	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
+	<changelog>
+		*17.0.3* Independent GPG signing key import
+		*17.0.2* Module signing
+		*17.0.1* Initial release - Backblaze B2 filestore driver
+	</changelog>
+	<category>Settings</category>
+	<description>Adds Backblaze B2 as a Filestore destination using the S3-compatible API</description>
+	<depends>
+		<module>filestore</module>
+	</depends>
+	<supported>
+		<version>17.0</version>
+	</supported>
+</module>
