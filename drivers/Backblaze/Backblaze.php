@@ -25,9 +25,13 @@ class Backblaze extends FlysystemBase
 	public static function getDisplay($freepbx, $config)
 	{
 		$regions = [
-			'US West (Sacramento)' => 'us-west-002',
-			'US West (Phoenix)' => 'us-west-004',
-			'EU Central (Amsterdam)' => 'eu-central-003',
+    		'US West (us-west-000)' => 'us-west-000',
+    		'US West (us-west-001)' => 'us-west-001',
+    		'US West (us-west-002)' => 'us-west-002',
+    		'US West (us-west-004)' => 'us-west-004',
+    		'US East - Reston (us-east-005)' => 'us-east-005',
+    		'EU Central - Amsterdam (eu-central-003)' => 'eu-central-003',
+    		'Canada East - Toronto (ca-east-006)' => 'ca-east-006',
 		];
 		if (empty($_GET['view'])) {
 			return load_view(__DIR__ . '/views/grid.php');
