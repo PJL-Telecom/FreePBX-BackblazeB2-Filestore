@@ -2,11 +2,12 @@
 	<rawname>filestorebackblaze</rawname>
 	<name>Filestore Backblaze</name>
 	<repo>unsupported</repo>
-	<version>17.0.3</version>
+	<version>17.0.4</version>
 	<publisher>PJL Telecom LLC</publisher>
 	<license>AGPLv3</license>
 	<licenselink>http://www.gnu.org/licenses/agpl-3.0.txt</licenselink>
 	<changelog>
+		*17.0.4* Fix path prefix so Backup Maintenance (Delete After Runs/Days) prunes remote backups; add full B2 region list
 		*17.0.3* Independent GPG signing key import
 		*17.0.2* Module signing
 		*17.0.1* Initial release - Backblaze B2 filestore driver

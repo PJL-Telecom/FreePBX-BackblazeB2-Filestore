@@ -8,7 +8,8 @@ A FreePBX module that adds [Backblaze B2](https://www.backblaze.com/cloud-storag
 - Uses Backblaze B2's S3-compatible API — no extra PHP dependencies required
 - Built-in connection test (API connectivity, credentials, write test)
 - Works with bucket-scoped Application Keys (recommended for security)
-- Supports all B2 regions: US West (Sacramento), US West (Phoenix), EU Central (Amsterdam)
+- Supports all current B2 S3 regions: `us-west-000/001/002/004`, `us-east-005` (Reston), `eu-central-003` (Amsterdam), `ca-east-006` (Toronto)
+- Honors the Backup module's **Maintenance** retention settings (Delete After Runs / Delete After Days) for remote pruning
 - Self-signed with PJL Telecom's GPG key — auto-imports on install
 
 ## Requirements
@@ -21,7 +22,7 @@ A FreePBX module that adds [Backblaze B2](https://www.backblaze.com/cloud-storag
 1. Download or clone this repo into your FreePBX modules directory:
    ```bash
    cd /var/www/html/admin/modules/
-   git clone https://github.com/PJL-Telecom/FreePBX-B2-Filestore.git filestorebackblaze
+   git clone https://github.com/PJL-Telecom/FreePBX-BackblazeB2-Filestore.git filestorebackblaze
    ```
 
 2. Install the module:
@@ -44,7 +45,7 @@ A FreePBX module that adds [Backblaze B2](https://www.backblaze.com/cloud-storag
    - **B2 Region** — the region your bucket is in
    - **Application Key ID** — your B2 keyID
    - **Application Key** — your B2 applicationKey
-   - **Path** — optional prefix within the bucket (e.g. `backups/freepbx`)
+   - **Path** — optional prefix within the bucket (e.g. `backups/freepbx`). Leading/trailing slashes are normalized automatically.
 5. Click **Test Connection Settings** to verify
 6. Submit and use as a backup destination
 
@@ -60,6 +61,17 @@ A FreePBX module that adds [Backblaze B2](https://www.backblaze.com/cloud-storag
 This module installs as a standalone FreePBX module and creates a symlink in the Filestore module's `drivers/` directory. This allows Filestore to discover the Backblaze driver without modifying any signed Filestore files.
 
 Under the hood, it uses the same AWS S3 SDK and Flysystem adapter that the built-in S3 driver uses, pointed at Backblaze's S3-compatible endpoint (`s3.<region>.backblazeb2.com`).
+
+The configured **Path** prefix is normalized (leading/trailing slashes stripped) before it reaches the adapter. This keeps object writes and listings consistent so the Backup module's Maintenance retention (Delete After Runs / Delete After Days) can find and prune old remote backups.
+
+## Changelog
+
+- **17.0.4** — Honor Backup Maintenance retention (fixes a leading-slash path prefix that left remote listings empty so old backups were never pruned); add full B2 region list.
+- **17.0.3** — Independent GPG signing key import.
+- **17.0.2** — Module signing.
+- **17.0.1** — Initial release.
+
+> **Upgrading from a build where your Path began with `/`:** existing backups were stored under that leading-slash prefix and will be orphaned (not listed/pruned) after upgrading. Move them to the normalized prefix once (server-side copy `/<prefix>/* → <prefix>/*`, then delete the old keys) so retention applies to them too.
 
 ## License
 

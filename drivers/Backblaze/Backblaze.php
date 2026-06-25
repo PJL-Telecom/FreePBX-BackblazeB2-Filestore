@@ -25,13 +25,13 @@ class Backblaze extends FlysystemBase
 	public static function getDisplay($freepbx, $config)
 	{
 		$regions = [
-    		'US West (us-west-000)' => 'us-west-000',
-    		'US West (us-west-001)' => 'us-west-001',
-    		'US West (us-west-002)' => 'us-west-002',
-    		'US West (us-west-004)' => 'us-west-004',
-    		'US East - Reston (us-east-005)' => 'us-east-005',
-    		'EU Central - Amsterdam (eu-central-003)' => 'eu-central-003',
-    		'Canada East - Toronto (ca-east-006)' => 'ca-east-006',
+			'US West (us-west-000)' => 'us-west-000',
+			'US West (us-west-001)' => 'us-west-001',
+			'US West (us-west-002)' => 'us-west-002',
+			'US West (us-west-004)' => 'us-west-004',
+			'US East - Reston (us-east-005)' => 'us-east-005',
+			'EU Central - Amsterdam (eu-central-003)' => 'eu-central-003',
+			'Canada East - Toronto (ca-east-006)' => 'ca-east-006',
 		];
 		if (empty($_GET['view'])) {
 			return load_view(__DIR__ . '/views/grid.php');
@@ -73,7 +73,12 @@ class Backblaze extends FlysystemBase
 		];
 
 		$client = new S3Client($config);
-		$this->config['path'] = $this->config['path'] === '/' ? '' : $this->config['path'];
+		// Normalize the path prefix. A leading slash makes Flysystem's AwsS3V3Adapter
+		// store objects under "/prefix/..." on write but list under "prefix/..." (it
+		// trims the leading slash only when listing), so listings - and therefore the
+		// Backup module's Maintenance pruning (Delete After Runs/Days) - never match.
+		// Strip leading/trailing slashes so write and list agree.
+		$this->config['path'] = trim($this->config['path'], '/');
 		$adapter = new AwsS3V3Adapter($client, $this->config['bucket'], $this->config['path']);
 		$this->handler = new Filesystem($adapter);
 		return $this->handler;
